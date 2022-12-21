@@ -134,5 +134,376 @@ Key indexing formular is `(index - 1)%% cycle_length + 1` this code make index
 recycle. When index is 4 it will cycle back to 1. When index is -1 it cycle back to 3.
 A rough proxy of python index.
 
+# 3
+--- Part One --- 
+```{r}
+data <- read_delim(here::here("2022", "input", "03_input.txt"), 
+                   delim = "\n",
+                   col_names = F)
+data <- data$X1
+
+x1 <- map(data, ~
+      str_sub(.x, 1, str_length(.x)/2) |> str_split("", simplify = T) |> as.vector() |> unique()
+              )
+x2 <- map(data, 
+          ~ str_sub(.x, str_length(.x)/2 + 1, str_length(.x)) |> str_split("", simplify = T) |> as.vector() |> unique())
+all_letters <- c(letters, LETTERS)
+map2_chr(x1, x2, intersect) |> 
+  match(all_letters) |> 
+  sum()
+```
+
+--- Part Two ---
+
+::: {.panel-tabset}
+## use a for loop
+```{r}
+myMtrx <- data |> 
+  matrix(nrow = 3, ncol = 100)
+{
+  I = 0
+  s = c()
+  for(i in seq(100)) {
+  item_type <- myMtrx[, i] |> 
+    map(str_split, "", simplify = T) |> 
+    map(as.vector) |> 
+    reduce(intersect)
+  priority <- match(item_type, all_letters)
+  I = priority + I
+  s = c(s, item_type)
+  }
+}
+I
+```
+
+## Matrix Apply
+```{r}
+token_intersect <- function(vec) {
+  vec |> 
+    map(str_split, "", simplify = T) |> 
+    map(as.vector) |> 
+    reduce(intersect)
+}
+myMtrx |> 
+  apply(2, token_intersect) |> 
+  match(all_letters) |> 
+  sum()
+```
+:::
+
+# 4
+
+--- Part One ---
+```{r}
+compare <- function(v1, v2) {
+  v1 <- as.integer(v1)
+  v2 <- as.integer(v2)
+  if(v1[1] <= v2[1] & v1[2] >= v2[2]) return(T)
+  if(v1[1] >= v2[1] & v1[2] <= v2[2]) return(T)
+  else return(F)
+}
+read_delim(here::here("2022", "input", "04_input.txt"), col_names = F) |> 
+  mutate(x = str_split(X1, "-", simplify = F)) |> 
+  mutate(y = str_split(X2, "-", simplify = F)) |> 
+  mutate(z = map2_lgl(x, y, compare)) |> 
+  filter(z) |> 
+  nrow()
+```
+
+--- Part Two ---
+
+```{r}
+is_overlap = function(v1, v2) {
+  if(v1[1] <= v2[1] & v2[1] <= v1[2]) return(T)
+  if(v1[1] <= v2[2] & v2[2] <= v1[2]) return(T)
+  return(F)
+}
+are_overlap = function(v1, v2) {
+  if(v1 |> is_overlap(v2)) return(T)
+  else v2 |> is_overlap(v1)
+}
+
+read_delim(here::here("2022", "input", "04_input.txt"), col_names = F, delim = ",") |> 
+  mutate(x = str_split(X1, "-", simplify = F) |> map(as.integer)) |> 
+  mutate(y = str_split(X2, "-", simplify = F) |> map(as.integer)) |> 
+  mutate(z = map2_lgl(x, y, are_overlap)) |> 
+  filter(z) |> 
+  nrow()
+```
 
 
+# 5
+--- Part One ---
+```{r}
+cargo = read_lines(here::here("2022", "input", "05_input.txt"))[1:10]
+command = read_lines(here::here("2022", "input", "05_input.txt"))[-c(1:10)]
+
+OGcargos <- cargo[1:8] |> 
+  # add a space at the end and then deduct it at the end
+  map_chr(~str_replace(.x, "$", " " )) |> 
+  map_chr(~str_replace_all(.x, "(?<!\\])\\s{4}", "NA ")) |> 
+  map_chr(~str_replace(.x, "\\s$", "")) |> 
+  # don't ask me why this works but it does. Totally scale able
+  str_flatten("\n") |> 
+  I() |> 
+  read_delim(delim = " ", col_names = F) |> 
+  
+  as.list() |> 
+  map(~discard(.x, is.na))
+  
+digitalCommand <- command |> 
+  str_extract_all("\\d+", simplify = F)
+
+length(digitalCommand)
+if(T) {
+  newCargo <- OGcargos
+  
+  for(i in seq(length(digitalCommand))) {
+    
+    move <- digitalCommand[[i]][1] |> as.integer()
+    from <- digitalCommand[[i]][2] |> as.integer()
+    to <- digitalCommand[[i]][3] |> as.integer()
+    
+    cargo_togo <- pluck(newCargo, from)[seq(move)]
+    newCargo <- modify_in(newCargo, from, ~.x[-c(seq(move))])
+    newCargo <- modify_in(newCargo, to, ~c(rev(cargo_togo), .x))
+    #message(paste(from, "-",str_flatten(cargo),"->", to))
+  }
+  newCargo |> map_chr(~.x[1]) |> str_replace_all("\\[|\\]", "") |> 
+  str_flatten()
+}
+```
+
+--- Part Two ---
+```{r}
+if(T) {
+  newCargo <- OGcargos
+  
+  for(i in seq(length(digitalCommand))) {
+    
+    move <- digitalCommand[[i]][1] |> as.integer()
+    from <- digitalCommand[[i]][2] |> as.integer()
+    to <- digitalCommand[[i]][3] |> as.integer()
+    
+    cargo_togo <- pluck(newCargo, from)[seq(move)]
+    newCargo <- modify_in(newCargo, from, ~.x[-c(seq(move))])
+    newCargo <- modify_in(newCargo, to, ~c(cargo_togo, .x))
+    #message(paste(from, "-",str_flatten(cargo),"->", to))
+  }
+  newCargo |> map_chr(~.x[1]) |> str_replace_all("\\[|\\]", "") |> 
+  str_flatten()
+}
+```
+
+```{r}
+# I discovered this function called `read_fwf`
+read_fwf(here::here("2022", "input", "05_input.txt"), n_max = 8)
+```
+
+# 6
+```{r}
+target_string <- read_file(here::here("2022", "input", "06_input.txt"))
+
+for(i in seq(4, str_length(target_string))) {
+  frack <- substr(target_string, i - 3, i)
+  if(!any(duplicated(frack |> str_split("", simplify = T) |> as.vector() ))) {
+    break
+  }
+}
+frack
+i
+```
+
+--- Part Two ---
+```{r}
+target_string <- read_file(here::here("2022", "input", "06_input.txt"))
+
+for(i in seq(14, str_length(target_string))) {
+  frack <- substr(target_string, i - 13, i)
+  if(!any(duplicated(frack |> str_split("", simplify = T) |> as.vector() ))) {
+    break
+  }
+}
+frack
+i
+```
+
+```{python}
+# import pandas as pd
+# import sys
+# print(sys.executable)
+from numpy import array
+from numpy import unique
+lab_string = "mjqjpqmgbljsphdztnvjfqwrcgsmlb"
+
+with open("input/06_input.txt", "r") as f:
+  target_string = f.read()
+
+for i in range(3, target_string.__len__()):
+  if(unique(array([*target_string[i - 3:i + 1]])).size == 4):
+    break
+print(i + 1)
+```
+
+# 7
+```{r}
+test <- read_file(here::here("2022","input","07_test.txt"))
+main <- read_file(here::here("2022","input","07_input.txt"))
+file <- main
+```
+
+```{r}
+chop_dir <- function(file) {
+  message("chop directory into chunks")
+  cd_pattern <- "\\$ cd (\\w+|\\/)\n\\$ ls\n(.|\n(?!\\$))*"
+  str_extract_all(file, cd_pattern, simplify = T) |> 
+  as.vector()
+}
+parent_dir <- function(v) {
+  str_extract(v, "(?<=\\$ cd ).+")
+}
+get_netsize = function(v) {
+  #message("from a single chunck, get all *direct* filesize")
+  str_extract_all(v, "\\d+(?= .+)", simplify = T) |> 
+    apply(2, as.numeric) |> 
+    sum() |> 
+    set_names(parent_dir(v))
+}
+index_directory <- function(file) {
+  message("produce a vector of named directory")
+  cd_commands <- file |> 
+    str_extract_all("(?<=\\$ cd ).+", simplify = T) |> 
+    as.vector()
+  
+  dir_level = 1 # in python set this to 0
+  dir_record = c()
+  ls_index = 1
+  dir_index = c()
+  
+  for(i in seq(length(cd_commands))) { ##' for loop is comfortable with accumulative effect
+    if(cd_commands[i] != "..") { ##' save computation 
+      dir_record <- c(dir_record, cd_commands[i])
+      fullpath <- paste(dir_record, collapse = "/")
+      ls_index <- set_names(ls_index, fullpath)
+      dir_index = c(dir_index, ls_index)
+      
+      dir_level = dir_level + 1
+      ls_index = ls_index + 1
+    } else {
+      dir_level = dir_level - 1
+      ls_index = ls_index # because this will be ignored by the regexp
+      dir_record <- head(dir_record, -1)
+    }
+  }
+  return(dir_index)
+}
+
+cdls_commands <- chop_dir(file)
+net_directory_size = index_directory(file) |> 
+  map_dbl(~cdls_commands[.x] |> get_netsize())
+directory_summary <- data.frame(net_dir_size = net_directory_size) |> 
+  rownames_to_column("dir_name") |> 
+  mutate(subs = map(dir_name, ~grep(paste0("^",.x), net_directory_size |> names()))) |> 
+  mutate(total_size = map_dbl(subs, ~sum(net_directory_size[.x]))) |> 
+  as_tibble()
+directory_summary
+```
+
+```{r}
+directory_summary |> 
+  filter(total_size <= 100000) |> 
+  summarise(n = sum(total_size))
+```
+
+```{r}
+spare_space <- 46975962 - (70000000 - 30000000)
+directory_summary |> 
+  filter(total_size >= spare_space) |> 
+  arrange(total_size)
+```
+
+# 8
+```{r}
+testfile_path <- here::here("2022", "input", "08_test.txt")
+file_path <- here::here("2022", "input", "08_input.txt")
+
+treeMatrix <- read_lines(file_path) |> 
+  str_split("", simplify = T) |> 
+  apply(2, as.numeric)
+
+treeMatrix[, 1]
+is_visible = function(v) {
+  trees_are_visible = c()
+  tree_counts = length(v)
+  for(i in seq(tree_counts)) {
+    
+    if(i == 1 | i == tree_counts ) {
+      tree_is_visible <- 0
+    } else {
+      tree <- v[i]
+      left <- max(v[1:(i - 1)])
+      right <- max(v[(i + 1):tree_counts])
+      if(any(c(left, right) < tree)) {
+        tree_is_visible <- 0
+      } else {
+        tree_is_visible <- 1
+      }
+    }
+    trees_are_visible = c(trees_are_visible, tree_is_visible)
+  }
+  return(trees_are_visible)
+}
+treeMatrix
+rownames(treeMatrix) <- paste("row", seq(5))
+colnames(treeMatrix) <- paste("col", seq(5))
+A <- treeMatrix |> 
+  apply(1, is_visible)
+B <- treeMatrix |> 
+  apply(2, is_visible)
+which(t(A) * B == 0) |> length()
+```
+
+```{r}
+treeMatrix <- read_lines(file_path) |> 
+  str_split("", simplify = T) |> 
+  apply(2, as.numeric)
+
+look_around = function(v, i) {
+      tree_counts <- length(v)
+      # tree <- v[i]
+      left_shorter <- rev(v[seq(i) -1])
+      right_shorter <- rev(rev(v)[seq(tree_counts - i + 1) -1])
+      return(list(right = right_shorter, 
+                  left = left_shorter))
+}
+how_scenic = function(v) {
+  scentic_scores = c()
+  tree_counts = length(v)
+  for(i in seq(tree_counts)) {
+    # if(i == 1 | i == tree_counts ) {
+    #   score <- 1
+    # } else {
+      tree <- v[i]
+      
+      left_view <- purrr::detect_index(look_around(v, i)$left, ~.x >= tree)
+      right_view <- purrr::detect_index(look_around(v, i)$right, ~.x >= tree)
+      
+      if(left_view == 0) left_view <-  i - 1
+      if(right_view == 0) right_view <- tree_counts - i
+      
+      
+      score <-  left_view * right_view
+    # }
+    scentic_scores = c(scentic_scores, score)
+  }
+  return(scentic_scores)
+}
+A = treeMatrix |> 
+  apply(1, how_scenic)
+
+B = treeMatrix |> 
+  apply(2, how_scenic)
+
+(t(A) * B) |> max()
+```
+Drawback of this is it ignores the edge

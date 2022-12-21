@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.247">
+<meta name="generator" content="quarto-1.2.269">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -135,15 +135,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># detect_index(elf, ~.x == max(elf))</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(elf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in max(elf): no non-missing arguments to max; returning -Inf</code></pre>
-</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -Inf</code></pre>
+<pre><code>[1] 72478</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(elf, <span class="at">decreasing =</span> T)[<span class="fu">seq</span>(<span class="dv">3</span>)] <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(elf, <span class="at">decreasing =</span> T)[<span class="fu">seq</span>(<span class="dv">3</span>)] <span class="sc">|&gt;</span> <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] NA</code></pre>
+<pre><code>[1] 210367</code></pre>
 </div>
 </div>
 </section>
@@ -154,66 +151,66 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">graph-solution</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">math-solution</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>law <span class="ot">=</span> <span class="fu">make_graph</span>(<span class="sc">~</span> A<span class="sc">-+</span>B<span class="sc">-+</span>C<span class="sc">-+</span>A)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>judge <span class="ot">=</span> <span class="cf">function</span>(elf, me) {</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">=</span> <span class="fu">distances</span>(law, <span class="at">v =</span> elf, <span class="at">to =</span> me, <span class="at">mode =</span> <span class="st">"out"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.integer</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">0</span>)[d <span class="sc">+</span> <span class="dv">1</span>])</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read_delim</span>(<span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"02_input.txt"</span>), </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">delim =</span> <span class="st">" "</span>, </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_names =</span> F)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">base_score =</span> <span class="fu">case_when</span>(</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="dv">1</span>,<span class="co">#Rock</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">2</span>,<span class="co">#Paper</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">3</span> <span class="co">#Scissors</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">X2 =</span> <span class="fu">case_when</span>(</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="st">"A"</span>,</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"B"</span>,</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="st">"C"</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bonus =</span> <span class="fu">map2_int</span>(</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    X1, X2, judge</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">final_score =</span> base_score <span class="sc">+</span> bonus) <span class="sc">|&gt;</span> </span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(final_score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>law <span class="ot">=</span> <span class="fu">make_graph</span>(<span class="sc">~</span> A<span class="sc">-+</span>B<span class="sc">-+</span>C<span class="sc">-+</span>A)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>judge <span class="ot">=</span> <span class="cf">function</span>(elf, me) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  d <span class="ot">=</span> <span class="fu">distances</span>(law, <span class="at">v =</span> elf, <span class="at">to =</span> me, <span class="at">mode =</span> <span class="st">"out"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.integer</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">0</span>)[d <span class="sc">+</span> <span class="dv">1</span>])</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read_delim</span>(<span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"02_input.txt"</span>), </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">delim =</span> <span class="st">" "</span>, </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_names =</span> F)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">base_score =</span> <span class="fu">case_when</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="dv">1</span>,<span class="co">#Rock</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">2</span>,<span class="co">#Paper</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">3</span> <span class="co">#Scissors</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">X2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="st">"A"</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"B"</span>,</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="st">"C"</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bonus =</span> <span class="fu">map2_int</span>(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    X1, X2, judge</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">final_score =</span> base_score <span class="sc">+</span> bonus) <span class="sc">|&gt;</span> </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(final_score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>law <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>judge <span class="ot">=</span> <span class="cf">function</span>(elf, me) {</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  elfmove <span class="ot">=</span> <span class="fu">match</span>(elf, law)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  mymove <span class="ot">=</span> <span class="fu">match</span>(me, law)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  mymove <span class="sc">-</span> elfmove</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read_delim</span>(<span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"02_input.txt"</span>), </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">delim =</span> <span class="st">" "</span>, </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_names =</span> F) <span class="sc">|&gt;</span> </span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressMessages</span>()</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">base_score =</span> <span class="fu">case_when</span>(</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="dv">1</span>,<span class="co">#Rock</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">2</span>,<span class="co">#Paper</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">3</span> <span class="co">#Scissors</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">X2 =</span> <span class="fu">case_when</span>(</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="st">"A"</span>,</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"B"</span>,</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="st">"C"</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">win =</span> </span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="sc">-</span><span class="dv">2</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="dv">0</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">final_score =</span> win <span class="sc">+</span> base_score) <span class="sc">|&gt;</span> </span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n  =</span> <span class="fu">sum</span>(final_score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>law <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>judge <span class="ot">=</span> <span class="cf">function</span>(elf, me) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  elfmove <span class="ot">=</span> <span class="fu">match</span>(elf, law)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  mymove <span class="ot">=</span> <span class="fu">match</span>(me, law)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  mymove <span class="sc">-</span> elfmove</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">read_delim</span>(<span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"02_input.txt"</span>), </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">delim =</span> <span class="st">" "</span>, </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">col_names =</span> F) <span class="sc">|&gt;</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressMessages</span>()</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">base_score =</span> <span class="fu">case_when</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="dv">1</span>,<span class="co">#Rock</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">2</span>,<span class="co">#Paper</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">3</span> <span class="co">#Scissors</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">X2 =</span> <span class="fu">case_when</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="st">"A"</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"B"</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="st">"C"</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">win =</span> </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">case_when</span>(</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="sc">-</span><span class="dv">2</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="dv">6</span>,</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">judge</span>(X1, X2) <span class="sc">==</span> <span class="dv">2</span> <span class="sc">~</span> <span class="dv">0</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">final_score =</span> win <span class="sc">+</span> base_score) <span class="sc">|&gt;</span> </span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n  =</span> <span class="fu">sum</span>(final_score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
       n
@@ -228,24 +225,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Note how in math-solution do not recycle, this problem would have been easier with python indexing, because in python -1 index will be the last.</p>
 <p>— Part Two —</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>shapeScore <span class="ot">=</span> <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">1</span>, <span class="at">B =</span> <span class="dv">2</span>, <span class="at">C =</span> <span class="dv">3</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>set <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">round_score =</span> <span class="fu">case_when</span>(</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">6</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">elf =</span> <span class="fu">match</span>(X1, set),</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">win_or_lose =</span> <span class="fu">case_when</span>(</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>           X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>           X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>           X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">1</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>         ),</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">me =</span> (elf <span class="sc">+</span> win_or_lose <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">%%</span><span class="dv">3</span> <span class="sc">+</span> <span class="dv">1</span> ) <span class="sc">|&gt;</span> </span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">base_score =</span> shapeScore[me]) <span class="sc">|&gt;</span> </span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total =</span>base_score <span class="sc">+</span> round_score) <span class="sc">|&gt;</span> </span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(total))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>shapeScore <span class="ot">=</span> <span class="fu">c</span>(<span class="at">A =</span> <span class="dv">1</span>, <span class="at">B =</span> <span class="dv">2</span>, <span class="at">C =</span> <span class="dv">3</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>set <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>data <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">round_score =</span> <span class="fu">case_when</span>(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">3</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">6</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  )) <span class="sc">|&gt;</span> </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">elf =</span> <span class="fu">match</span>(X1, set),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">win_or_lose =</span> <span class="fu">case_when</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>           X2 <span class="sc">==</span> <span class="st">"X"</span> <span class="sc">~</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>           X2 <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="dv">0</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>           X2 <span class="sc">==</span> <span class="st">"Z"</span> <span class="sc">~</span> <span class="dv">1</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>         ),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">me =</span> (elf <span class="sc">+</span> win_or_lose <span class="sc">-</span> <span class="dv">1</span>)<span class="sc">%%</span><span class="dv">3</span> <span class="sc">+</span> <span class="dv">1</span> ) <span class="sc">|&gt;</span> </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">base_score =</span> shapeScore[me]) <span class="sc">|&gt;</span> </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total =</span>base_score <span class="sc">+</span> round_score) <span class="sc">|&gt;</span> </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(total))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 1
       n
@@ -254,6 +251,434 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>Key indexing formular is <code>(index - 1)%% cycle_length + 1</code> this code make index recycle. When index is 4 it will cycle back to 1. When index is -1 it cycle back to 3. A rough proxy of python index.</p>
+</section>
+<section id="section-2" class="level1">
+<h1>3</h1>
+<p>— Part One —</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"03_input.txt"</span>), </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">delim =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">col_names =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 300 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\001"
+chr (1): X1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data<span class="sc">$</span>X1</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x1 <span class="ot">&lt;-</span> <span class="fu">map</span>(data, <span class="sc">~</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">str_sub</span>(.x, <span class="dv">1</span>, <span class="fu">str_length</span>(.x)<span class="sc">/</span><span class="dv">2</span>) <span class="sc">|&gt;</span> <span class="fu">str_split</span>(<span class="st">""</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> <span class="fu">as.vector</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>x2 <span class="ot">&lt;-</span> <span class="fu">map</span>(data, </span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>          <span class="sc">~</span> <span class="fu">str_sub</span>(.x, <span class="fu">str_length</span>(.x)<span class="sc">/</span><span class="dv">2</span> <span class="sc">+</span> <span class="dv">1</span>, <span class="fu">str_length</span>(.x)) <span class="sc">|&gt;</span> <span class="fu">str_split</span>(<span class="st">""</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> <span class="fu">as.vector</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>())</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>all_letters <span class="ot">&lt;-</span> <span class="fu">c</span>(letters, LETTERS)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">map2_chr</span>(x1, x2, intersect) <span class="sc">|&gt;</span> </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">match</span>(all_letters) <span class="sc">|&gt;</span> </span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7553</code></pre>
+</div>
+</div>
+<p>— Part Two —</p>
+<div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">use a for loop</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Matrix Apply</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>myMtrx <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">matrix</span>(<span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">100</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  I <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">100</span>)) {</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  item_type <span class="ot">&lt;-</span> myMtrx[, i] <span class="sc">|&gt;</span> </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(str_split, <span class="st">""</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> </span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(as.vector) <span class="sc">|&gt;</span> </span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">reduce</span>(intersect)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>  priority <span class="ot">&lt;-</span> <span class="fu">match</span>(item_type, all_letters)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  I <span class="ot">=</span> priority <span class="sc">+</span> I</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  s <span class="ot">=</span> <span class="fu">c</span>(s, item_type)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>I</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2758</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>token_intersect <span class="ot">&lt;-</span> <span class="cf">function</span>(vec) {</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  vec <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(str_split, <span class="st">""</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map</span>(as.vector) <span class="sc">|&gt;</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">reduce</span>(intersect)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>myMtrx <span class="sc">|&gt;</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(<span class="dv">2</span>, token_intersect) <span class="sc">|&gt;</span> </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">match</span>(all_letters) <span class="sc">|&gt;</span> </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2758</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="section-3" class="level1">
+<h1>4</h1>
+<p>— Part One —</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>compare <span class="ot">&lt;-</span> <span class="cf">function</span>(v1, v2) {</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  v1 <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(v1)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  v2 <span class="ot">&lt;-</span> <span class="fu">as.integer</span>(v2)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(v1[<span class="dv">1</span>] <span class="sc">&lt;=</span> v2[<span class="dv">1</span>] <span class="sc">&amp;</span> v1[<span class="dv">2</span>] <span class="sc">&gt;=</span> v2[<span class="dv">2</span>]) <span class="fu">return</span>(T)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(v1[<span class="dv">1</span>] <span class="sc">&gt;=</span> v2[<span class="dv">1</span>] <span class="sc">&amp;</span> v1[<span class="dv">2</span>] <span class="sc">&lt;=</span> v2[<span class="dv">2</span>]) <span class="fu">return</span>(T)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="fu">return</span>(F)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"04_input.txt"</span>), <span class="at">col_names =</span> F) <span class="sc">|&gt;</span> </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x =</span> <span class="fu">str_split</span>(X1, <span class="st">"-"</span>, <span class="at">simplify =</span> F)) <span class="sc">|&gt;</span> </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">y =</span> <span class="fu">str_split</span>(X2, <span class="st">"-"</span>, <span class="at">simplify =</span> F)) <span class="sc">|&gt;</span> </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z =</span> <span class="fu">map2_lgl</span>(x, y, compare)) <span class="sc">|&gt;</span> </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(z) <span class="sc">|&gt;</span> </span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1000 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): X1, X2
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 483</code></pre>
+</div>
+</div>
+<p>— Part Two —</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>is_overlap <span class="ot">=</span> <span class="cf">function</span>(v1, v2) {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(v1[<span class="dv">1</span>] <span class="sc">&lt;=</span> v2[<span class="dv">1</span>] <span class="sc">&amp;</span> v2[<span class="dv">1</span>] <span class="sc">&lt;=</span> v1[<span class="dv">2</span>]) <span class="fu">return</span>(T)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(v1[<span class="dv">1</span>] <span class="sc">&lt;=</span> v2[<span class="dv">2</span>] <span class="sc">&amp;</span> v2[<span class="dv">2</span>] <span class="sc">&lt;=</span> v1[<span class="dv">2</span>]) <span class="fu">return</span>(T)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(F)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>are_overlap <span class="ot">=</span> <span class="cf">function</span>(v1, v2) {</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(v1 <span class="sc">|&gt;</span> <span class="fu">is_overlap</span>(v2)) <span class="fu">return</span>(T)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> v2 <span class="sc">|&gt;</span> <span class="fu">is_overlap</span>(v1)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">read_delim</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"04_input.txt"</span>), <span class="at">col_names =</span> F, <span class="at">delim =</span> <span class="st">","</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">x =</span> <span class="fu">str_split</span>(X1, <span class="st">"-"</span>, <span class="at">simplify =</span> F) <span class="sc">|&gt;</span> <span class="fu">map</span>(as.integer)) <span class="sc">|&gt;</span> </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">y =</span> <span class="fu">str_split</span>(X2, <span class="st">"-"</span>, <span class="at">simplify =</span> F) <span class="sc">|&gt;</span> <span class="fu">map</span>(as.integer)) <span class="sc">|&gt;</span> </span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">z =</span> <span class="fu">map2_lgl</span>(x, y, are_overlap)) <span class="sc">|&gt;</span> </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(z) <span class="sc">|&gt;</span> </span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 1000 Columns: 2
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): X1, X2
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 874</code></pre>
+</div>
+</div>
+</section>
+<section id="section-4" class="level1">
+<h1>5</h1>
+<p>— Part One —</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>cargo <span class="ot">=</span> <span class="fu">read_lines</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"05_input.txt"</span>))[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>command <span class="ot">=</span> <span class="fu">read_lines</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"05_input.txt"</span>))[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)]</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>OGcargos <span class="ot">&lt;-</span> cargo[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>] <span class="sc">|&gt;</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add a space at the end and then deduct it at the end</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_chr</span>(<span class="sc">~</span><span class="fu">str_replace</span>(.x, <span class="st">"$"</span>, <span class="st">" "</span> )) <span class="sc">|&gt;</span> </span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_chr</span>(<span class="sc">~</span><span class="fu">str_replace_all</span>(.x, <span class="st">"(?&lt;!</span><span class="sc">\\</span><span class="st">])</span><span class="sc">\\</span><span class="st">s{4}"</span>, <span class="st">"NA "</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_chr</span>(<span class="sc">~</span><span class="fu">str_replace</span>(.x, <span class="st">"</span><span class="sc">\\</span><span class="st">s$"</span>, <span class="st">""</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># don't ask me why this works but it does. Totally scale able</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_flatten</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">I</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_delim</span>(<span class="at">delim =</span> <span class="st">" "</span>, <span class="at">col_names =</span> F) <span class="sc">|&gt;</span> </span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.list</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map</span>(<span class="sc">~</span><span class="fu">discard</span>(.x, is.na))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 8 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: " "
+chr (9): X1, X2, X3, X4, X5, X6, X7, X8, X9
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>digitalCommand <span class="ot">&lt;-</span> command <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_extract_all</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">d+"</span>, <span class="at">simplify =</span> F)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(digitalCommand)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 501</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(T) {</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  newCargo <span class="ot">&lt;-</span> OGcargos</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="fu">length</span>(digitalCommand))) {</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    move <span class="ot">&lt;-</span> digitalCommand[[i]][<span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="fu">as.integer</span>()</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    from <span class="ot">&lt;-</span> digitalCommand[[i]][<span class="dv">2</span>] <span class="sc">|&gt;</span> <span class="fu">as.integer</span>()</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    to <span class="ot">&lt;-</span> digitalCommand[[i]][<span class="dv">3</span>] <span class="sc">|&gt;</span> <span class="fu">as.integer</span>()</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    cargo_togo <span class="ot">&lt;-</span> <span class="fu">pluck</span>(newCargo, from)[<span class="fu">seq</span>(move)]</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    newCargo <span class="ot">&lt;-</span> <span class="fu">modify_in</span>(newCargo, from, <span class="sc">~</span>.x[<span class="sc">-</span><span class="fu">c</span>(<span class="fu">seq</span>(move))])</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    newCargo <span class="ot">&lt;-</span> <span class="fu">modify_in</span>(newCargo, to, <span class="sc">~</span><span class="fu">c</span>(<span class="fu">rev</span>(cargo_togo), .x))</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#message(paste(from, "-",str_flatten(cargo),"-&gt;", to))</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  newCargo <span class="sc">|&gt;</span> <span class="fu">map_chr</span>(<span class="sc">~</span>.x[<span class="dv">1</span>]) <span class="sc">|&gt;</span> <span class="fu">str_replace_all</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">[|</span><span class="sc">\\</span><span class="st">]"</span>, <span class="st">""</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_flatten</span>()</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "TWSGQHNHL"</code></pre>
+</div>
+</div>
+<p>— Part Two —</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(T) {</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  newCargo <span class="ot">&lt;-</span> OGcargos</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="fu">length</span>(digitalCommand))) {</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    move <span class="ot">&lt;-</span> digitalCommand[[i]][<span class="dv">1</span>] <span class="sc">|&gt;</span> <span class="fu">as.integer</span>()</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    from <span class="ot">&lt;-</span> digitalCommand[[i]][<span class="dv">2</span>] <span class="sc">|&gt;</span> <span class="fu">as.integer</span>()</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    to <span class="ot">&lt;-</span> digitalCommand[[i]][<span class="dv">3</span>] <span class="sc">|&gt;</span> <span class="fu">as.integer</span>()</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    cargo_togo <span class="ot">&lt;-</span> <span class="fu">pluck</span>(newCargo, from)[<span class="fu">seq</span>(move)]</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    newCargo <span class="ot">&lt;-</span> <span class="fu">modify_in</span>(newCargo, from, <span class="sc">~</span>.x[<span class="sc">-</span><span class="fu">c</span>(<span class="fu">seq</span>(move))])</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    newCargo <span class="ot">&lt;-</span> <span class="fu">modify_in</span>(newCargo, to, <span class="sc">~</span><span class="fu">c</span>(cargo_togo, .x))</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#message(paste(from, "-",str_flatten(cargo),"-&gt;", to))</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  newCargo <span class="sc">|&gt;</span> <span class="fu">map_chr</span>(<span class="sc">~</span>.x[<span class="dv">1</span>]) <span class="sc">|&gt;</span> <span class="fu">str_replace_all</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">[|</span><span class="sc">\\</span><span class="st">]"</span>, <span class="st">""</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_flatten</span>()</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "JNRSCDWPP"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I discovered this function called `read_fwf`</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_fwf</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"05_input.txt"</span>), <span class="at">n_max =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 8 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+
+chr (9): X1, X2, X3, X4, X5, X6, X7, X8, X9
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 9
+  X1    X2    X3    X4    X5    X6    X7    X8    X9   
+  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
+1 &lt;NA&gt;  &lt;NA&gt;  [J]   &lt;NA&gt;  &lt;NA&gt;  [B]   &lt;NA&gt;  [T]   &lt;NA&gt; 
+2 &lt;NA&gt;  &lt;NA&gt;  [M]   [L]   &lt;NA&gt;  [Q]   [L]   [R]   &lt;NA&gt; 
+3 &lt;NA&gt;  &lt;NA&gt;  [G]   [Q]   &lt;NA&gt;  [W]   [S]   [B]   [L]  
+4 [D]   &lt;NA&gt;  [D]   [T]   &lt;NA&gt;  [M]   [G]   [V]   [P]  
+5 [T]   &lt;NA&gt;  [N]   [N]   [N]   [D]   [J]   [G]   [N]  
+6 [W]   [H]   [H]   [S]   [C]   [N]   [R]   [W]   [D]  
+7 [N]   [P]   [P]   [W]   [H]   [H]   [B]   [N]   [G]  
+8 [L]   [C]   [W]   [C]   [P]   [T]   [M]   [Z]   [W]  </code></pre>
+</div>
+</div>
+</section>
+<section id="section-5" class="level1">
+<h1>6</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>target_string <span class="ot">&lt;-</span> <span class="fu">read_file</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"06_input.txt"</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">4</span>, <span class="fu">str_length</span>(target_string))) {</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  frack <span class="ot">&lt;-</span> <span class="fu">substr</span>(target_string, i <span class="sc">-</span> <span class="dv">3</span>, i)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">any</span>(<span class="fu">duplicated</span>(frack <span class="sc">|&gt;</span> <span class="fu">str_split</span>(<span class="st">""</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> <span class="fu">as.vector</span>() ))) {</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>frack</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "nmjl"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>i</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1598</code></pre>
+</div>
+</div>
+<p>— Part Two —</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>target_string <span class="ot">&lt;-</span> <span class="fu">read_file</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>, <span class="st">"input"</span>, <span class="st">"06_input.txt"</span>))</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="dv">14</span>, <span class="fu">str_length</span>(target_string))) {</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  frack <span class="ot">&lt;-</span> <span class="fu">substr</span>(target_string, i <span class="sc">-</span> <span class="dv">13</span>, i)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">any</span>(<span class="fu">duplicated</span>(frack <span class="sc">|&gt;</span> <span class="fu">str_split</span>(<span class="st">""</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> <span class="fu">as.vector</span>() ))) {</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>frack</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "rmbvhnlstfpgzw"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>i</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2414</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># import pandas as pd</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># import sys</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="co"># print(sys.executable)</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> array</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy <span class="im">import</span> unique</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>lab_string <span class="op">=</span> <span class="st">"mjqjpqmgbljsphdztnvjfqwrcgsmlb"</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"input/06_input.txt"</span>, <span class="st">"r"</span>) <span class="im">as</span> f:</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>  target_string <span class="op">=</span> f.read()</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>, target_string.<span class="fu">__len__</span>()):</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(unique(array([<span class="op">*</span>target_string[i <span class="op">-</span> <span class="dv">3</span>:i <span class="op">+</span> <span class="dv">1</span>]])).size <span class="op">==</span> <span class="dv">4</span>):</span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">break</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(i <span class="op">+</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1598</code></pre>
+</div>
+</div>
+</section>
+<section id="section-6" class="level1">
+<h1>7</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">read_file</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>,<span class="st">"input"</span>,<span class="st">"07_test.txt"</span>))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">&lt;-</span> <span class="fu">read_file</span>(here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"2022"</span>,<span class="st">"input"</span>,<span class="st">"07_input.txt"</span>))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>file <span class="ot">&lt;-</span> main</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>chop_dir <span class="ot">&lt;-</span> <span class="cf">function</span>(file) {</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"chop directory into chunks"</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  cd_pattern <span class="ot">&lt;-</span> <span class="st">"</span><span class="sc">\\</span><span class="st">$ cd (</span><span class="sc">\\</span><span class="st">w+|</span><span class="sc">\\</span><span class="st">/)</span><span class="sc">\n\\</span><span class="st">$ ls</span><span class="sc">\n</span><span class="st">(.|</span><span class="sc">\n</span><span class="st">(?!</span><span class="sc">\\</span><span class="st">$))*"</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_extract_all</span>(file, cd_pattern, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.vector</span>()</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>parent_dir <span class="ot">&lt;-</span> <span class="cf">function</span>(v) {</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_extract</span>(v, <span class="st">"(?&lt;=</span><span class="sc">\\</span><span class="st">$ cd ).+"</span>)</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>get_netsize <span class="ot">=</span> <span class="cf">function</span>(v) {</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">#message("from a single chunck, get all *direct* filesize")</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_extract_all</span>(v, <span class="st">"</span><span class="sc">\\</span><span class="st">d+(?= .+)"</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> </span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">apply</span>(<span class="dv">2</span>, as.numeric) <span class="sc">|&gt;</span> </span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_names</span>(<span class="fu">parent_dir</span>(v))</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>index_directory <span class="ot">&lt;-</span> <span class="cf">function</span>(file) {</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"produce a vector of named directory"</span>)</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>  cd_commands <span class="ot">&lt;-</span> file <span class="sc">|&gt;</span> </span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_extract_all</span>(<span class="st">"(?&lt;=</span><span class="sc">\\</span><span class="st">$ cd ).+"</span>, <span class="at">simplify =</span> T) <span class="sc">|&gt;</span> </span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.vector</span>()</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>  dir_level <span class="ot">=</span> <span class="dv">1</span> <span class="co"># in python set this to 0</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>  dir_record <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>  ls_index <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a>  dir_index <span class="ot">=</span> <span class="fu">c</span>()</span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq</span>(<span class="fu">length</span>(cd_commands))) { <span class="do">##' for loop is comfortable with accumulative effect</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(cd_commands[i] <span class="sc">!=</span> <span class="st">".."</span>) { <span class="do">##' save computation </span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>      dir_record <span class="ot">&lt;-</span> <span class="fu">c</span>(dir_record, cd_commands[i])</span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a>      fullpath <span class="ot">&lt;-</span> <span class="fu">paste</span>(dir_record, <span class="at">collapse =</span> <span class="st">"/"</span>)</span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>      ls_index <span class="ot">&lt;-</span> <span class="fu">set_names</span>(ls_index, fullpath)</span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a>      dir_index <span class="ot">=</span> <span class="fu">c</span>(dir_index, ls_index)</span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a>      dir_level <span class="ot">=</span> dir_level <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>      ls_index <span class="ot">=</span> ls_index <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a>      dir_level <span class="ot">=</span> dir_level <span class="sc">-</span> <span class="dv">1</span></span>
+<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a>      ls_index <span class="ot">=</span> ls_index <span class="co"># because this will be ignored by the regexp</span></span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>      dir_record <span class="ot">&lt;-</span> <span class="fu">head</span>(dir_record, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(dir_index)</span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a>cdls_commands <span class="ot">&lt;-</span> <span class="fu">chop_dir</span>(file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>chop directory into chunks</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>net_directory_size <span class="ot">=</span> <span class="fu">index_directory</span>(file) <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dbl</span>(<span class="sc">~</span>cdls_commands[.x] <span class="sc">|&gt;</span> <span class="fu">get_netsize</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>produce a vector of named directory</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>directory_summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">net_dir_size =</span> net_directory_size) <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"dir_name"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">subs =</span> <span class="fu">map</span>(dir_name, <span class="sc">~</span><span class="fu">grep</span>(<span class="fu">paste0</span>(<span class="st">"^"</span>,.x), net_directory_size <span class="sc">|&gt;</span> <span class="fu">names</span>()))) <span class="sc">|&gt;</span> </span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">total_size =</span> <span class="fu">map_dbl</span>(subs, <span class="sc">~</span><span class="fu">sum</span>(net_directory_size[.x]))) <span class="sc">|&gt;</span> </span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>directory_summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 206 × 4
+   dir_name                      net_dir_size subs        total_size
+   &lt;chr&gt;                                &lt;dbl&gt; &lt;list&gt;           &lt;dbl&gt;
+ 1 /                                   305959 &lt;int [206]&gt;   46975962
+ 2 //ddgtnw                            324527 &lt;int [20]&gt;     5672556
+ 3 //ddgtnw/gftgshl                         0 &lt;int [5]&gt;      1678636
+ 4 //ddgtnw/gftgshl/mtshhn             442860 &lt;int [1]&gt;       442860
+ 5 //ddgtnw/gftgshl/smnslwd           1017250 &lt;int [2]&gt;      1038227
+ 6 //ddgtnw/gftgshl/smnslwd/grct        20977 &lt;int [1]&gt;        20977
+ 7 //ddgtnw/gftgshl/znbs               197549 &lt;int [1]&gt;       197549
+ 8 //ddgtnw/grct                       401244 &lt;int [1]&gt;       401244
+ 9 //ddgtnw/wtgzgmvr                   153202 &lt;int [13]&gt;     3268149
+10 //ddgtnw/wtgzgmvr/cfvjph            201215 &lt;int [1]&gt;       201215
+# … with 196 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>directory_summary <span class="sc">|&gt;</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_size <span class="sc">&lt;=</span> <span class="dv">100000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">sum</span>(total_size))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+        n
+    &lt;dbl&gt;
+1 1334506</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>spare_space <span class="ot">&lt;-</span> <span class="dv">46975962</span> <span class="sc">-</span> (<span class="dv">70000000</span> <span class="sc">-</span> <span class="dv">30000000</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>directory_summary <span class="sc">|&gt;</span> </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(total_size <span class="sc">&gt;=</span> spare_space) <span class="sc">|&gt;</span> </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(total_size)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 4
+  dir_name                           net_dir_size subs        total_size
+  &lt;chr&gt;                                     &lt;dbl&gt; &lt;list&gt;           &lt;dbl&gt;
+1 //dzbfsf/tllwm/smnslwd/tlms/ptzptl       289944 &lt;int [32]&gt;     7421137
+2 //qjnnw/shffbpjj/pcqbmmzt                638850 &lt;int [33]&gt;     8528732
+3 //qjnnw/shffbpjj                              0 &lt;int [35]&gt;     8672671
+4 //dzbfsf/tllwm/smnslwd/tlms              133558 &lt;int [56]&gt;    11884526
+5 //dzbfsf/tllwm/smnslwd                   340206 &lt;int [63]&gt;    13560646
+6 //qjnnw                                  583729 &lt;int [80]&gt;    17459970
+7 //dzbfsf/tllwm                                0 &lt;int [84]&gt;    18659329
+8 //dzbfsf                                 395843 &lt;int [89]&gt;    19354558
+9 /                                        305959 &lt;int [206]&gt;   46975962</code></pre>
+</div>
+</div>
+</section>
+<section id="section-7" class="level1">
+<h1>8</h1>
+<div class="cell">
+
+</div>
 </section>
 
 </main>

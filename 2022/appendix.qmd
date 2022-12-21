@@ -1,0 +1,69 @@
+---
+title: "appendix and thoughts" 
+---
+
+## Day 7 - Bined Scripts
+Day 7 is about finding directory tree and sum each branch. 
+My first thoughts was to construct a igraph model that mimick a directory tree.
+Then we solve this problem using pure graph theory. 
+
+But as it soon turns out directory name dont have to be unique.
+```{.r}
+#| eval: false
+# Data Cleaning
+
+
+# child_dir <- function(v) {
+#   str_extract_all(v, "(?<=dir )\\w+", simplify = T) |> 
+#     as.vector()
+# }
+
+
+# family_name <- function(v) {
+#   tibble(
+#     from = parent_dir(v),
+#     to =  child_dir(v)
+#   )
+# }
+parent_names <- chunk_dir(file) |> map_chr(parent_dir)
+##' I have two ideas 
+##' one is query adjacent node sum net file value. do so f
+##' two is better. Use graph level. Which is distance from leaf to root.
+chunk_dir(file) |> 
+  map_dfr(family_name) |> 
+  mutate(add_size = net_dir_size[from]) |> 
+  tidygraph::as_tbl_graph() |> 
+  mutate(level = node_distance_from(1)) |> 
+  mutate(color = ifelse(igraph::degree(.G(), row_number(), mode = "in") > 1, 
+                        "orange",
+                        NA
+                        )) |> 
+  visNetwork::visIgraph() |> 
+  visNetwork::visHierarchicalLayout()
+##' this method of finding directory graph is failed because directory tree
+##' is not a DAG 
+##' The reason directory tree did not create dig is because ity allow
+##' non unique names within sub directory
+```
+
+```{r}
+#| eval: false
+fun0_base <- function() {
+  index_directory(file)
+}
+fun1_sapply <- function() {
+  index_directory(file) |> sapply(\(x) get_netsize(cdls_commands[x]))
+}
+fun2_map <- function() {
+  index_directory(file) |> 
+  map_dbl(~cdls_commands[.x] |> get_netsize())
+}
+microbenchmark::microbenchmark(
+  fun0_base(),
+  fun1_sapply(),
+  fun2_map()
+) |> 
+  plot()
+```
+Most of the time this code takes is just literally just mapping around between 
+your own function and subset them..
